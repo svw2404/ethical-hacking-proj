@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Employee Profile — Atlas Core [VULNERABLE]{% endblock %}
+
+{% block content %}
+<div class="vuln-banner">
+  ⚠ VULNERABLE VERSION — IDOR / Broken Access Control demonstrated here
+</div>
+
+<div class="profile-header">
+  <span class="session-info">Logged in as: <strong>{{ session_user }}</strong></span>
+  <a href="/logout" class="btn-logout">Logout</a>
+  <a href="/login" class="btn-secondary">← Back to Login</a>
+</div>
+
+{% if profile %}
+  {% if profile['access_level'] == 'Administrator' %}
+  <div class="flag-banner">
+    🚩 ADMINISTRATOR PROFILE ACCESSED — FLAG CAPTURED
+  </div>
+  {% endif %}
+
+  <div class="profile-card {% if profile['access_level'] == 'Administrator' %}admin-profile{% else %}employee-profile{% endif %}">
+    <div class="profile-top">
+      <div class="profile-avatar">{{ profile['name'][0] }}</div>
+      <div class="profile-identity">
+        <h2 class="profile-name">{{ profile['name'] }}</h2>
+        <div class="profile-dept">{{ profile['department'] }}</div>
+        <span class="profile-badge {% if profile['access_level'] == 'Administrator' %}badge-admin{% else %}badge-employee{% endif %}">
+          {{ profile['access_level'] }}
+        </span>
+      </div>
+    </div>
+
+    <div class="profile-details">
+      <div class="detail-row">
+        <span class="detail-label">Profile ID</span>
+        <span class="detail-value mono">{{ profile['id'] }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Department</span>
+        <span class="detail-value">{{ profile['department'] }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Access Level</span>
+        <span class="detail-value">{{ profile['access_level'] }}</span>
+      </div>
+      <div class="detail-row {% if profile['access_level'] == 'Administrator' %}flag-row{% endif %}">
+        <span class="detail-label">Notes</span>
+        <span class="detail-value mono flag-text">{{ profile['note'] }}</span>
+      </div>
+    </div>
+
+    <div class="idor-indicator">
+      Current URL profile ID: <code>?id={{ profile['id'] }}</code>
+      &nbsp;|&nbsp; Your session user ID: <code>{{ session_user }}</code>
+      {% if not own %}
+      <span class="idor-warn">&nbsp;⚠ You are viewing another user's profile — IDOR vulnerability active</span>
+      {% endif %}
+    </div>
+  </div>
+
+{% else %}
+  <div class="error-box">
+    <strong>Profile not found.</strong> No profile exists for the requested ID.
+  </div>
+{% endif %}
+
+<div class="challenge-info">
+  <div class="info-card vuln-card">
+    <h3 class="vuln-title">// Vulnerable Code (for learning)</h3>
+    <pre class="code-block vuln-code">
+# VULNERABLE: backend trusts the URL parameter without authorization check
+@app.route("/profile")
+def profile():
+    profile_id = request.args.get("id")   # taken directly from URL
+    user = db.execute(
+        "SELECT * FROM profiles WHERE id = ?", (profile_id,)
+    ).fetchone()
+    return render_template("profile.html", profile=user)
+
+# No check: "Is the logged-in user allowed to view profile_id?"
+# Attacker changes ?id=102 to ?id=1 → admin profile exposed
+    </pre>
+  </div>
+
+  <div class="learning-block">
+    <h3>// Blue Team — Vulnerability Explanation</h3>
+    <p><strong>Vulnerability:</strong> IDOR — Insecure Direct Object Reference / Broken Access Control (OWASP A01:2021)</p>
+    <p><strong>Root cause:</strong> The server returns profile data based solely on the <code>id</code> parameter in the URL without verifying that the currently authenticated user has permission to view that profile.</p>
+    <p><strong>Impact:</strong> Any authenticated user can view any other user's profile, including administrator records containing sensitive data or flags, by simply changing a number in the URL.</p>
+    <h4>Mitigations — see <a href="/secure-profile?id={{ profile['id'] if profile else 1 }}">Secure Version</a>:</h4>
+    <ul>
+      <li>Always enforce authorization server-side: verify that <code>session["user_id"] == requested_id</code> before returning data.</li>
+      <li>Never trust URL parameters to determine what data a user can access.</li>
+      <li>Use indirect object references (e.g., UUIDs instead of sequential IDs).</li>
+      <li>Log unauthorized access attempts for audit and alerting.</li>
+    </ul>
+    <p><strong>OWASP Category:</strong> A01:2021 — Broken Access Control</p>
+  </div>
+</div>
+{% endblock %}

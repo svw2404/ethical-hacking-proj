@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Home — Operation Digital Turf War{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <div class="hero-tag">CLASSIFIED // EYES ONLY</div>
+  <h1 class="hero-title">Operation<br><span class="green">Digital Turf War</span></h1>
+  <p class="hero-sub">
+    A three-stage Capture-the-Flag cybersecurity lab.<br>
+    Atlas Core vs BlueCore. The network is at stake.
+  </p>
+</div>
+
+<div class="mission-grid">
+
+  <a href="/mission1" class="mission-card easy">
+    <div class="card-header">
+      <span class="badge easy-badge">EASY · 100 PTS</span>
+      <span class="card-category">Web / Info Disclosure</span>
+    </div>
+    <h2 class="card-title">Mission 1</h2>
+    <h3 class="card-name">Staff Portal Leak</h3>
+    <p class="card-desc">
+      Atlas Core's internal portal may be hiding something in plain sight.
+      Inspect carefully — developers sometimes leave clues behind.
+    </p>
+    <div class="card-tools">Tools: Browser DevTools</div>
+    <div class="card-flag-hint">Flag format: picoCTF{...}</div>
+  </a>
+
+  <a href="/mission2" class="mission-card medium">
+    <div class="card-header">
+      <span class="badge medium-badge">MEDIUM · 200 PTS</span>
+      <span class="card-category">Encoding / Crypto</span>
+    </div>
+    <h2 class="card-title">Mission 2</h2>
+    <h3 class="card-name">Layered Transmission</h3>
+    <p class="card-desc">
+      An intercepted transmission from BlueCore operatives. The message
+      looks scrambled — but layered protection is not the same as encryption.
+    </p>
+    <div class="card-tools">Tools: CyberChef, Python</div>
+    <div class="card-flag-hint">Flag format: picoCTF{...}</div>
+  </a>
+
+  <a href="/login" class="mission-card hard">
+    <div class="card-header">
+      <span class="badge hard-badge">HARD · 300 PTS</span>
+      <span class="card-category">Web + Network</span>
+    </div>
+    <h2 class="card-title">Mission 3</h2>
+    <h3 class="card-name">Digital Turf Breach</h3>
+    <p class="card-desc">
+      The final Atlas Core employee portal. Scan the assigned VM, discover
+      the service, bypass authentication, and escalate access to retrieve
+      the administrator's recovery note.
+    </p>
+    <div class="card-tools">Tools: nmap, Burp Suite, Browser</div>
+    <div class="card-flag-hint">Flag format: picoCTF{...}</div>
+  </a>
+
+</div>
+
+<section class="info-section">
+  <h2 class="section-title">Assignment Mapping</h2>
+  <table class="info-table">
+    <thead>
+      <tr><th>Requirement</th><th>Implementation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Easy Challenge (100 pts)</td><td>Mission 1 — Staff Portal Leak</td></tr>
+      <tr><td>Medium Challenge (200 pts)</td><td>Mission 2 — Layered Transmission</td></tr>
+      <tr><td>Hard Challenge (300 pts)</td><td>Mission 3 — Digital Turf Breach</td></tr>
+      <tr><td>Web Vulnerability</td><td>HTML info disclosure + SQL Injection + IDOR</td></tr>
+      <tr><td>Network Vulnerability</td><td>nmap scan, exposed Flask service on port 5000</td></tr>
+      <tr><td>Encoding / Crypto</td><td>Base64 + Reverse + Caesar cipher chain</td></tr>
+      <tr><td>Defense / Blue Team</td><td>Secure version, logging, rate limiting</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="info-section">
+  <h2 class="section-title">Lab Rules</h2>
+  <ul class="rules-list">
+    <li>✅ Attack only the assigned VM / localhost lab environment</li>
+    <li>✅ Use approved tools: nmap, Burp Suite, CyberChef, browser DevTools</li>
+    <li>✅ Submit flag + technical write-up for each mission</li>
+    <li>❌ No DoS attacks</li>
+    <li>❌ No attacks outside the lab environment</li>
+    <li>❌ No real malware or destructive payloads</li>
+  </ul>
+</section>
+{% endblock %}

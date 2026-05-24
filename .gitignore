@@ -1,0 +1,11 @@
+app/database.db
+app/logs/access.log
+__pycache__/
+*.pyc
+*.pyo
+.env
+.DS_Store
+Thumbs.db
+
+# Private solution file — never push to public repos
+TEACHER_SOLUTION.md

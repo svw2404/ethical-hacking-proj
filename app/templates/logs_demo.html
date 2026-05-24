@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Logs Demo — Blue Team{% endblock %}
+
+{% block content %}
+<div class="secure-banner">
+  Blue Team — Logging &amp; Monitoring Demonstration (OWASP A09)
+</div>
+
+<div class="logs-container">
+  <h2 class="section-title">// Access Log — app/logs/access.log</h2>
+  <p class="logs-desc">
+    This log captures all login attempts, SQL injection detections, profile access mismatches,
+    rate limit events, and security anomalies. Interact with the vulnerable and secure routes,
+    then refresh this page to see what was recorded.
+  </p>
+
+  {% if log_entries %}
+  <div class="log-terminal">
+    {% for entry in log_entries %}
+      <div class="log-line
+        {% if '[WARNING]' in entry %}log-warn
+        {% elif '[ERROR]' in entry %}log-error
+        {% elif '[INFO]' in entry %}log-info
+        {% endif %}">{{ entry.strip() }}</div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="log-empty">
+    No log entries yet. Try interacting with
+    <a href="/login">the vulnerable login</a> or
+    <a href="/secure-login">the secure login</a> first.
+  </div>
+  {% endif %}
+</div>
+
+<div class="challenge-info">
+  <div class="learning-block">
+    <h3>// Blue Team — Logging &amp; Monitoring Explanation</h3>
+    <p><strong>OWASP Category:</strong> A09:2021 — Security Logging and Monitoring Failures</p>
+    <p>
+      This log demonstrates what a real application should record: who attempted to log in,
+      from which IP address, whether the payload looked malicious, whether access was
+      unauthorized, and what the outcome was.
+    </p>
+    <h4>Log entries recorded by this system:</h4>
+    <table class="info-table">
+      <thead><tr><th>Event</th><th>Log Level</th><th>What Is Recorded</th></tr></thead>
+      <tbody>
+        <tr><td>Login attempt</td><td><span class="log-info-tag">INFO</span></td><td>Username, IP address, timestamp</td></tr>
+        <tr><td>SQL injection payload</td><td><span class="log-warn-tag">WARNING</span></td><td>IP, raw payload string</td></tr>
+        <tr><td>Login failure</td><td><span class="log-warn-tag">WARNING</span></td><td>Username, IP</td></tr>
+        <tr><td>Login success</td><td><span class="log-info-tag">INFO</span></td><td>Username, IP</td></tr>
+        <tr><td>IDOR profile access</td><td><span class="log-warn-tag">WARNING</span></td><td>Session user ID, requested profile ID, IP</td></tr>
+        <tr><td>Rate limit exceeded</td><td><span class="log-warn-tag">WARNING</span></td><td>IP address</td></tr>
+        <tr><td>Secure login blocked</td><td><span class="log-warn-tag">WARNING</span></td><td>IP, payload (not shown to user)</td></tr>
+        <tr><td>Database error</td><td><span class="log-error-tag">ERROR</span></td><td>IP, error message</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Why logging matters:</h4>
+    <ul>
+      <li>Without logs, repeated attack attempts go unnoticed until serious damage occurs.</li>
+      <li>Logs allow incident response teams to reconstruct exactly what happened and when.</li>
+      <li>Alerts can be triggered when suspicious patterns appear (e.g., 100 failed logins from one IP).</li>
+      <li>Logs must be tamper-resistant and stored separately from the application they monitor.</li>
+      <li>Logs should never contain raw passwords or full credit card numbers.</li>
+    </ul>
+
+    <h4>Hardening plan:</h4>
+    <ul>
+      <li>Send logs to a centralized SIEM (Security Information and Event Management) system.</li>
+      <li>Set up alerting rules for high-frequency login failures or SQL injection signatures.</li>
+      <li>Store logs with write-only access — applications can append but not delete.</li>
+      <li>Rotate and archive logs regularly with integrity verification (e.g., hash chains).</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

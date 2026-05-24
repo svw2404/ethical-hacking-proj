@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Staff Portal — Atlas Core Systems{% endblock %}
+
+{% block content %}
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  DEBUG NOTE (developer left in production — DO NOT SHIP):        ║
+  ║  Temporary login disabled for maintenance.                       ║
+  ║  Use flag for emergency bypass: picoCTF{html_comments_are_dangerous} ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+
+<div class="challenge-banner easy-banner">
+  Mission 1 — Easy — 100 pts &nbsp;|&nbsp; Web / Information Disclosure
+</div>
+
+<div class="portal-container">
+  <div class="portal-logo">
+    <div class="portal-icon">🔒</div>
+    <h1 class="portal-title">ATLAS CORE</h1>
+    <p class="portal-sub">Staff Portal — Authorized Access Only</p>
+  </div>
+
+  <form class="login-form" method="post" action="/mission1">
+    <div class="form-group">
+      <label for="username">Employee ID</label>
+      <input type="text" id="username" name="username" placeholder="Enter employee ID" autocomplete="off" />
+    </div>
+    <div class="form-group">
+      <label for="password">Access Code</label>
+      <input type="password" id="password" name="password" placeholder="Enter access code" />
+    </div>
+    <button type="submit" class="btn-login">AUTHENTICATE</button>
+  </form>
+
+  <p class="portal-note">
+    Access restricted to Atlas Core personnel. Unauthorized access attempts are monitored and logged.
+  </p>
+</div>
+
+<div class="challenge-info">
+  <h2 class="section-title">Challenge Brief</h2>
+  <div class="info-card">
+    <div class="info-row"><span class="info-label">Category</span><span class="info-value">Web / Information Disclosure</span></div>
+    <div class="info-row"><span class="info-label">Difficulty</span><span class="easy-text">Easy — 100 pts</span></div>
+    <div class="info-row"><span class="info-label">Vulnerability</span><span class="info-value">OWASP A05 Security Misconfiguration — Sensitive data in HTML comments</span></div>
+    <div class="info-row"><span class="info-label">Tools</span><span class="info-value">Browser, View Page Source, DevTools (F12)</span></div>
+  </div>
+
+  <div class="story-block">
+    <h3 class="story-title">// Mission Brief</h3>
+    <p>
+      Intelligence reports indicate that Atlas Core Systems deployed their internal staff portal
+      to a live server without removing developer debugging notes. A careless developer left
+      sensitive information somewhere in the page — but the rendered page looks completely normal.
+    </p>
+    <p>
+      Your mission: inspect the page source and recover the first flag.
+    </p>
+  </div>
+
+  <div class="hints-block">
+    <h3 class="hints-title">// Hints</h3>
+    <details class="hint-item">
+      <summary>Hint 1 (click to reveal)</summary>
+      <p>Have you tried looking at what the browser receives but does not display on the screen?</p>
+    </details>
+    <details class="hint-item">
+      <summary>Hint 2 (click to reveal)</summary>
+      <p>Right-click on the page and select "View Page Source." Search for the word "flag" or look for HTML comment tags.</p>
+    </details>
+  </div>
+
+  <div class="learning-block">
+    <h3>// Blue Team — Vulnerability Explanation</h3>
+    <p><strong>Root cause:</strong> Sensitive debugging information was placed inside HTML comments in the production page source. HTML comments are delivered to every browser that loads the page.</p>
+    <p><strong>Impact:</strong> Any user can press Ctrl+U or use DevTools to read HTML comments, exposing flags, API keys, credentials, internal paths, or debug notes.</p>
+    <h4>Mitigations:</h4>
+    <ul>
+      <li>Remove all comments and debug notes before deployment.</li>
+      <li>Never store secrets, credentials, or flags in client-side code.</li>
+      <li>Use a code review checklist that includes comment inspection.</li>
+      <li>Store secrets server-side using environment variables or a secrets manager.</li>
+      <li>Never assume anything sent to the browser is hidden from the user.</li>
+    </ul>
+    <p><strong>OWASP Category:</strong> A05:2021 — Security Misconfiguration / Sensitive Data Exposure</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+services:
+  ctf-app:
+    build: .
+    container_name: operation-digital-turf-war
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app/logs:/ctf/logs
+    restart: unless-stopped

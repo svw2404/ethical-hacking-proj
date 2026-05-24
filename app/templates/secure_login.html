@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Secure Login — Atlas Core Portal{% endblock %}
+
+{% block content %}
+<div class="secure-banner">
+  ✅ SECURE VERSION — Parameterized queries, hashed passwords, rate limiting
+</div>
+
+<div class="portal-container">
+  <div class="portal-logo">
+    <div class="portal-icon">🔒</div>
+    <h1 class="portal-title green">ATLAS CORE</h1>
+    <p class="portal-sub">Employee Portal — Secure Edition</p>
+  </div>
+
+  <form class="login-form" method="post" action="/secure-login">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter username" autocomplete="off" />
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" />
+    </div>
+    <button type="submit" class="btn-login btn-secure">LOGIN</button>
+  </form>
+
+  {% if error %}
+  <div class="error-box secure-error">
+    <strong>{{ error }}</strong>
+  </div>
+  {% endif %}
+
+  <p class="portal-note">
+    Try the SQL injection payload from Mission 3 here — it will be blocked.<br>
+    Credentials (for demo): <code>maya / employee123</code>
+  </p>
+</div>
+
+<div class="challenge-info">
+  <div class="info-card secure-card">
+    <h3 class="secure-title">// Secure Code (comparison)</h3>
+    <pre class="code-block secure-code">
+# SECURE: parameterized query — user input never touches SQL syntax
+user = db.execute(
+    "SELECT * FROM users WHERE username = ?",
+    (username,)
+).fetchone()
+
+# SECURE: compare against stored SHA-256 hash
+if user and user["password_hash"] == sha256(password):
+    # login success — set session
+    ...
+
+# SECURE: rate limiting — blocks brute-force / automated attacks
+if is_rate_limited(ip):
+    return "Too many attempts. Please wait.", 429
+
+# SECURE: generic error — does not disclose which field was wrong
+return "Invalid credentials."
+
+# Attack payload ' OR '1'='1' -- → treated as literal string → fails
+    </pre>
+  </div>
+
+  <div class="comparison-grid">
+    <div class="compare-col vuln-col">
+      <h4 class="compare-title red-text">Vulnerable Version</h4>
+      <ul>
+        <li>String concatenation SQL → injectable</li>
+        <li>Passwords stored in plain text</li>
+        <li>No rate limiting</li>
+        <li>Error message exposes the SQL query</li>
+        <li>SQL injection payload → bypasses login</li>
+      </ul>
+    </div>
+    <div class="compare-col secure-col">
+      <h4 class="compare-title green-text">Secure Version</h4>
+      <ul>
+        <li>Parameterized query → injection impossible</li>
+        <li>Passwords stored as SHA-256 hashes</li>
+        <li>Rate limiting: 5 attempts / 60 seconds per IP</li>
+        <li>Generic error message — no info disclosure</li>
+        <li>SQL injection payload → fails, logged, blocked</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

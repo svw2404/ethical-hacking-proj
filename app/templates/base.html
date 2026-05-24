@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Operation Digital Turf War{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a class="nav-brand" href="/">
+      <span class="brand-slash">//</span> ATLAS CORE
+      <span class="brand-sub">DIGITAL TURF WAR</span>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mission1">Mission 1</a>
+      <a href="/mission2">Mission 2</a>
+      <div class="nav-dropdown">
+        <button class="dropdown-toggle">Mission 3 ▾</button>
+        <div class="dropdown-menu">
+          <a href="/login">Vulnerable Login</a>
+          <a href="/secure-login">Secure Login</a>
+          <a href="/logs-demo">Logs Demo</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <p>Operation Digital Turf War &mdash; Ethical Hacking CTF Lab &mdash; Educational Use Only</p>
+    <p class="footer-warn">⚠ This environment contains intentional vulnerabilities. Authorized lab environment only. Do not attack external systems.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Secure Profile — Atlas Core{% endblock %}
+
+{% block content %}
+<div class="secure-banner">
+  ✅ SECURE VERSION — Session-based authorization, unauthorized access blocked
+</div>
+
+<div class="profile-header">
+  <span class="session-info">Logged in as: <strong>{{ session_user }}</strong></span>
+  <a href="/secure-logout" class="btn-logout">Logout</a>
+  <a href="/secure-login" class="btn-secondary">← Back to Secure Login</a>
+</div>
+
+{% if blocked %}
+  <div class="blocked-box">
+    <div class="blocked-icon">🚫</div>
+    <h2 class="blocked-title">403 — Access Denied</h2>
+    <p class="blocked-msg">
+      You are not authorized to view this profile.<br>
+      This request has been logged.
+    </p>
+    <div class="blocked-note">
+      <strong>What happened?</strong> You tried to access a profile that does not belong to your account.
+      In the secure version, the server checks <code>session["user_id"] == requested_id</code>
+      before returning any data. This check failed, and access was denied.
+    </div>
+  </div>
+
+{% elif profile %}
+  <div class="profile-card employee-profile">
+    <div class="profile-top">
+      <div class="profile-avatar">{{ profile['name'][0] }}</div>
+      <div class="profile-identity">
+        <h2 class="profile-name">{{ profile['name'] }}</h2>
+        <div class="profile-dept">{{ profile['department'] }}</div>
+        <span class="profile-badge badge-employee">{{ profile['access_level'] }}</span>
+      </div>
+    </div>
+    <div class="profile-details">
+      <div class="detail-row">
+        <span class="detail-label">Profile ID</span>
+        <span class="detail-value mono">{{ profile['id'] }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Department</span>
+        <span class="detail-value">{{ profile['department'] }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Access Level</span>
+        <span class="detail-value">{{ profile['access_level'] }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Notes</span>
+        <span class="detail-value">{{ profile['note'] }}</span>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<div class="challenge-info">
+  <div class="info-card secure-card">
+    <h3 class="secure-title">// Secure Code (comparison)</h3>
+    <pre class="code-block secure-code">
+# SECURE: authorization check before returning profile data
+@app.route("/secure-profile")
+def secure_profile():
+    requested_id = request.args.get("id")
+    current_user = session["user_id"]
+    current_role = session["role"]
+
+    # Only allow access to own profile, or admin accessing any
+    if requested_id != str(current_user) and current_role != "admin":
+        logger.warning(f"Blocked IDOR attempt: user={current_user} requested={requested_id}")
+        return "403 Access Denied", 403
+
+    # Safe to return the profile now
+    profile = db.execute("SELECT * FROM profiles WHERE id = ?", (requested_id,)).fetchone()
+    return render_template("secure_profile.html", profile=profile)
+    </pre>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Login — Atlas Core Portal [VULNERABLE]{% endblock %}
+
+{% block content %}
+<div class="vuln-banner">
+  ⚠ VULNERABLE VERSION — SQL Injection demonstrated here for educational purposes
+</div>
+
+<div class="challenge-banner hard-banner">
+  Mission 3 — Hard — 300 pts &nbsp;|&nbsp; Web + Network
+</div>
+
+<div class="portal-container">
+  <div class="portal-logo">
+    <div class="portal-icon">🔓</div>
+    <h1 class="portal-title">ATLAS CORE</h1>
+    <p class="portal-sub">Employee Portal — v1.0 (Legacy)</p>
+  </div>
+
+  <form class="login-form" method="post" action="/login">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter username" autocomplete="off" />
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" />
+    </div>
+    <button type="submit" class="btn-login btn-vuln">LOGIN</button>
+  </form>
+
+  {% if error %}
+  <div class="error-box vuln-error">
+    <strong>Login Failed</strong>
+    <pre class="error-detail">{{ error }}</pre>
+  </div>
+  {% endif %}
+
+  <p class="portal-note">
+    Internal system. All sessions are recorded.
+  </p>
+</div>
+
+<div class="challenge-info">
+  <div class="info-card vuln-card">
+    <h3 class="vuln-title">// Vulnerable Code (for learning)</h3>
+    <pre class="code-block vuln-code">
+# VULNERABLE: string concatenation — user input injected directly into SQL
+query = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
+db.execute(query)
+
+# Attack payload (username field):
+' OR '1'='1' --
+
+# Resulting query:
+SELECT * FROM users WHERE username='' OR '1'='1' --' AND password='anything'
+# '1'='1' is always true → authentication bypassed
+    </pre>
+  </div>
+
+  <div class="story-block">
+    <h3 class="story-title">// Mission Brief</h3>
+    <p>
+      Your team has reached the final Atlas Core employee portal, discovered running on the
+      assigned lab VM. Start by scanning the VM with <code>nmap</code> to confirm the service,
+      then access the login page and exploit the authentication vulnerability.
+    </p>
+    <p>
+      After bypassing login, look closely at the URL. The profile ID is exposed as a parameter —
+      and the backend does not verify that the logged-in user is authorized to view any given profile.
+    </p>
+    <p>
+      Retrieve the administrator's recovery note to capture the final flag.
+    </p>
+  </div>
+
+  <div class="hints-block">
+    <h3 class="hints-title">// Hints</h3>
+    <details class="hint-item">
+      <summary>Hint 1 (click to reveal)</summary>
+      <p>What happens if a SQL condition is always true? What does that do to a WHERE clause?</p>
+    </details>
+    <details class="hint-item">
+      <summary>Hint 2 (click to reveal)</summary>
+      <p>Try entering a single quote <code>'</code> in the username field and observe the error message carefully.</p>
+    </details>
+    <details class="hint-item">
+      <summary>Hint 3 (click to reveal)</summary>
+      <p>After logging in, look at the URL bar. What does the <code>id</code> parameter control? What happens if you change it?</p>
+    </details>
+  </div>
+</div>
+{% endblock %}

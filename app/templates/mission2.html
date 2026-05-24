@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Layered Transmission — Mission 2{% endblock %}
+
+{% block content %}
+<div class="challenge-banner medium-banner">
+  Mission 2 — Medium — 200 pts &nbsp;|&nbsp; Encoding / Crypto
+</div>
+
+<div class="transmission-container">
+  <h2 class="transmission-title">// INTERCEPTED TRANSMISSION</h2>
+  <p class="transmission-sub">Source: Unknown · Classification: SENSITIVE · Origin: BlueCore Network</p>
+
+  <div class="payload-box">
+    <div class="payload-label">ENCODED PAYLOAD:</div>
+    <div class="payload-data" id="payload">{{ payload }}</div>
+    <button class="btn-copy" onclick="copyPayload()">Copy</button>
+  </div>
+
+  <div class="case-note">
+    <span class="note-icon">📋</span>
+    Case note from field operative:<br>
+    <em>"Layered protection is not the same as encryption.
+    This message was obfuscated using multiple reversible transformations.
+    Peel back each layer to recover the original transmission."</em>
+  </div>
+</div>
+
+<div class="challenge-info">
+  <h2 class="section-title">Challenge Brief</h2>
+  <div class="info-card">
+    <div class="info-row"><span class="info-label">Category</span><span class="info-value">Encoding / Cryptography</span></div>
+    <div class="info-row"><span class="info-label">Difficulty</span><span class="medium-text">Medium — 200 pts</span></div>
+    <div class="info-row"><span class="info-label">Vulnerability</span><span class="info-value">Cryptographic Failure — encoding used as encryption</span></div>
+    <div class="info-row"><span class="info-label">Tools</span><span class="info-value">CyberChef, Python, manual analysis</span></div>
+  </div>
+
+  <div class="story-block">
+    <h3 class="story-title">// Mission Brief</h3>
+    <p>
+      After recovering the first flag from the staff portal, your team intercepted a transmission
+      from the rival BlueCore unit. The message appears scrambled — but a field operative confirmed
+      that it was only "protected" using reversible transformations, not real cryptography.
+    </p>
+    <p>
+      Decode the message layer by layer and recover the second flag.
+    </p>
+  </div>
+
+  <div class="hints-block">
+    <h3 class="hints-title">// Hints</h3>
+    <details class="hint-item">
+      <summary>Hint 1 (click to reveal)</summary>
+      <p>The message has more than one layer. Do not stop at the first decoding.</p>
+    </details>
+    <details class="hint-item">
+      <summary>Hint 2 (click to reveal)</summary>
+      <p>The outermost layer is a very common encoding used on the web. It ends in "==" sometimes.</p>
+    </details>
+    <details class="hint-item">
+      <summary>Hint 3 (click to reveal)</summary>
+      <p>After decoding the first layer, check whether the text direction seems normal.</p>
+    </details>
+    <details class="hint-item">
+      <summary>Hint 4 (click to reveal)</summary>
+      <p>The final layer uses a classic alphabet shift used by Roman generals. Try shifting each letter by the same amount.</p>
+    </details>
+  </div>
+
+  <div class="solve-steps">
+    <h3>// Solve Steps (Python reference)</h3>
+    <pre class="code-block">
+import base64
+
+payload = "{{ payload }}"
+
+# Step 1: Base64 decode
+step1 = base64.b64decode(payload).decode()
+print("After Base64:", step1)
+
+# Step 2: Reverse the string
+step2 = step1[::-1]
+print("After reverse:", step2)
+
+# Step 3: Caesar shift -3 (each letter shifted back by 3)
+def caesar(text, shift):
+    result = []
+    for ch in text:
+        if ch.isalpha():
+            base = ord('A') if ch.isupper() else ord('a')
+            result.append(chr((ord(ch) - base + shift) % 26 + base))
+        else:
+            result.append(ch)
+    return ''.join(result)
+
+flag = caesar(step2, -3)
+print("Flag:", flag)
+    </pre>
+  </div>
+
+  <div class="learning-block">
+    <h3>// Blue Team — Vulnerability Explanation</h3>
+    <p><strong>Root cause:</strong> Sensitive data was obfuscated using reversible encoding transformations (Base64, string reversal, Caesar cipher) instead of real cryptographic encryption. Any of these steps can be reversed by an attacker using free tools.</p>
+    <p><strong>Impact:</strong> An attacker who recognizes the encoding format can decode the message using CyberChef or Python in minutes, without any key or secret.</p>
+    <h4>Key distinction:</h4>
+    <ul>
+      <li><strong>Encoding</strong> (Base64, Hex, URL encoding) is reversible transformation — it is not secret and provides no confidentiality.</li>
+      <li><strong>Encryption</strong> (AES, RSA, ChaCha20) requires a secret key. Without the key, reversal is computationally infeasible.</li>
+    </ul>
+    <h4>Mitigations:</h4>
+    <ul>
+      <li>Use real cryptographic encryption (AES-256-GCM, RSA-OAEP) for sensitive data in transit.</li>
+      <li>Manage and protect encryption keys securely.</li>
+      <li>Never rely on encoding, obfuscation, or "security by obscurity" as a protection mechanism.</li>
+      <li>Follow OWASP A02:2021 — Cryptographic Failures guidance.</li>
+    </ul>
+    <p><strong>OWASP Category:</strong> A02:2021 — Cryptographic Failures</p>
+  </div>
+</div>
+{% endblock %}
