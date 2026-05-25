@@ -57,6 +57,19 @@ Each mission has a flag in the format `picoCTF{...}`. Flags are discovered by ex
 
 ---
 
+## Per-Instance Seed (Recommended)
+
+Each deployed instance should use a unique `CTF_INSTANCE_SEED`. The app derives the Mission 3 case code from this seed at startup — so even if someone has the source code or screenshots from a different run, the case code they find will not work on your live instance.
+
+```env
+CTF_INSTANCE_SEED=<long-random-string>   # e.g. openssl rand -hex 16
+CTF_TEAM_ID=team_blue_01                 # optional label, included in decoded transmissions
+```
+
+The database must be re-initialized after changing `CTF_INSTANCE_SEED` (restart the container or delete `app/database.db` and rerun `python app/init_db.py`).
+
+---
+
 ## Setup — Run Locally (Python)
 
 ```bash

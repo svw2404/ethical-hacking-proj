@@ -8,9 +8,15 @@ try:
 except ImportError:
     pass
 
-DB_PATH    = os.path.join(os.path.dirname(__file__), "database.db")
-_M3_FLAG   = os.environ.get("CTF_M3_FLAG",   "picoCTF{REPLACE_ME_M3}")
-_CASE_CODE = os.environ.get("CTF_CASE_CODE", "REPLACE_ME")
+DB_PATH        = os.path.join(os.path.dirname(__file__), "database.db")
+_M3_FLAG       = os.environ.get("CTF_M3_FLAG",       "picoCTF{REPLACE_ME_M3}")
+_INSTANCE_SEED = os.environ.get("CTF_INSTANCE_SEED", "")
+
+_derived_case = (
+    hashlib.sha256(f"case_code:{_INSTANCE_SEED}".encode()).hexdigest()[:12]
+    if _INSTANCE_SEED else "REPLACE_ME"
+)
+_CASE_CODE = os.environ.get("CTF_CASE_CODE") or _derived_case
 
 
 def sha256(text: str) -> str:

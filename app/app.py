@@ -26,9 +26,19 @@ DB_PATH  = os.path.join(BASE_DIR, "database.db")
 LOG_PATH = os.path.join(BASE_DIR, "logs", "access.log")
 
 # ── Load flags and runtime secrets from environment ───────────────────────────
-_M1_FLAG   = os.environ.get("CTF_M1_FLAG",   "picoCTF{REPLACE_ME_M1}")
-_M2_FLAG   = os.environ.get("CTF_M2_FLAG",   "picoCTF{REPLACE_ME_M2}")
-_CASE_CODE = os.environ.get("CTF_CASE_CODE", "REPLACE_ME")
+_M1_FLAG       = os.environ.get("CTF_M1_FLAG",   "picoCTF{REPLACE_ME_M1}")
+_M2_FLAG       = os.environ.get("CTF_M2_FLAG",   "picoCTF{REPLACE_ME_M2}")
+_INSTANCE_SEED = os.environ.get("CTF_INSTANCE_SEED", "")
+_TEAM_ID       = os.environ.get("CTF_TEAM_ID",       "ops")
+
+# Case code: explicit override wins; otherwise derived from CTF_INSTANCE_SEED so
+# each deployed instance produces a different code — static analysis of the source
+# or old screenshots cannot determine the correct code for the running instance.
+_derived_case = (
+    hashlib.sha256(f"case_code:{_INSTANCE_SEED}".encode()).hexdigest()[:12]
+    if _INSTANCE_SEED else "REPLACE_ME"
+)
+_CASE_CODE = os.environ.get("CTF_CASE_CODE") or _derived_case
 
 # ── Mission 1 — split flag into 4 base64 fragments ────────────────────────────
 _q     = len(_M1_FLAG) // 4
@@ -54,6 +64,7 @@ MISSION2_PAYLOAD = base64.b64encode(_rev_hex.encode()).decode()
 # 731-A: simple base64; decodes to plaintext containing the Mission 3 case code
 _decoy_a_text = (
     f"AtlasCore Ops // Batch 731 status nominal"
+    f" // Team: {_TEAM_ID}"
     f" // Case AC-731 verification token: {_CASE_CODE}"
     f" // Comms secure."
 )
