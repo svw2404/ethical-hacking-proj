@@ -16,15 +16,15 @@
   <a href="/mission1" class="mission-card easy">
     <div class="card-header">
       <span class="badge easy-badge">EASY · 100 PTS</span>
-      <span class="card-category">Web / Info Disclosure</span>
+      <span class="card-category">Web</span>
     </div>
     <h2 class="card-title">Mission 1</h2>
     <h3 class="card-name">Staff Portal Leak</h3>
     <p class="card-desc">
       Atlas Core's internal portal may be hiding something in plain sight.
-      Inspect carefully — developers sometimes leave clues behind.
+      Inspect carefully — developers sometimes leave traces behind.
     </p>
-    <div class="card-tools">Tools: Browser DevTools</div>
+    <div class="card-tools">Tools: Browser</div>
     <div class="card-flag-hint">Flag format: picoCTF{...}</div>
   </a>
 
@@ -51,9 +51,8 @@
     <h2 class="card-title">Mission 3</h2>
     <h3 class="card-name">Digital Turf Breach</h3>
     <p class="card-desc">
-      The final Atlas Core employee portal. Scan the assigned VM, discover
-      the service, bypass authentication, and escalate access to retrieve
-      the administrator's recovery note.
+      The final Atlas Core target. Identify the exposed service on the assigned
+      lab network, investigate the portal, and recover the final operation flag.
     </p>
     <div class="card-tools">Tools: nmap, Burp Suite, Browser</div>
     <div class="card-flag-hint">Flag format: picoCTF{...}</div>
@@ -62,19 +61,30 @@
 </div>
 
 <section class="info-section">
-  <h2 class="section-title">Assignment Mapping</h2>
+  <h2 class="section-title">Mission Overview</h2>
   <table class="info-table">
     <thead>
-      <tr><th>Requirement</th><th>Implementation</th></tr>
+      <tr><th>Mission</th><th>Category</th><th>Points</th><th>Objective</th></tr>
     </thead>
     <tbody>
-      <tr><td>Easy Challenge (100 pts)</td><td>Mission 1 — Staff Portal Leak</td></tr>
-      <tr><td>Medium Challenge (200 pts)</td><td>Mission 2 — Layered Transmission</td></tr>
-      <tr><td>Hard Challenge (300 pts)</td><td>Mission 3 — Digital Turf Breach</td></tr>
-      <tr><td>Web Vulnerability</td><td>HTML info disclosure + SQL Injection + IDOR</td></tr>
-      <tr><td>Network Vulnerability</td><td>nmap scan, exposed Flask service on port 5000</td></tr>
-      <tr><td>Encoding / Crypto</td><td>Base64 + Reverse + Caesar cipher chain</td></tr>
-      <tr><td>Defense / Blue Team</td><td>Secure version, logging, rate limiting</td></tr>
+      <tr>
+        <td>Mission 1 — Staff Portal Leak</td>
+        <td>Web</td>
+        <td>100</td>
+        <td>Recover a flag from the Atlas Core staff portal.</td>
+      </tr>
+      <tr>
+        <td>Mission 2 — Layered Transmission</td>
+        <td>Encoding / Crypto</td>
+        <td>200</td>
+        <td>Decode an intercepted BlueCore transmission and extract the flag.</td>
+      </tr>
+      <tr>
+        <td>Mission 3 — Digital Turf Breach</td>
+        <td>Web + Network</td>
+        <td>300</td>
+        <td>Discover the exposed service, access the portal, and retrieve the administrator's recovery note.</td>
+      </tr>
     </tbody>
   </table>
 </section>
@@ -83,7 +93,7 @@
   <h2 class="section-title">Lab Rules</h2>
   <ul class="rules-list">
     <li>✅ Attack only the assigned VM / localhost lab environment</li>
-    <li>✅ Use approved tools: nmap, Burp Suite, CyberChef, browser DevTools</li>
+    <li>✅ Use approved tools: nmap, Burp Suite, CyberChef, browser</li>
     <li>✅ Submit flag + technical write-up for each mission</li>
     <li>❌ No DoS attacks</li>
     <li>❌ No attacks outside the lab environment</li>
