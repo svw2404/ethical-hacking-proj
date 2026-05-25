@@ -8,23 +8,36 @@
 </div>
 
 <div class="transmission-container">
-  <h2 class="transmission-title">// INTERCEPTED TRANSMISSION</h2>
+  <h2 class="transmission-title">// INTERCEPTED TRANSMISSIONS</h2>
   <p class="transmission-sub">
-    Source: Unknown · Classification: SENSITIVE · Origin: BlueCore Network
+    Source: BlueCore relay nodes &middot; Classification: SENSITIVE &middot; Batch: 731
   </p>
 
   <div class="payload-box">
-    <div class="payload-label">INTERCEPTED PAYLOAD</div>
+    <div class="payload-label">TRANSMISSION 731-A</div>
+    <div class="payload-data" id="decoy-a">{{ decoy_a }}</div>
+    <button class="btn-copy" onclick="copyText('decoy-a')">Copy</button>
+  </div>
+
+  <div class="payload-box" style="margin-top:1.5rem;">
+    <div class="payload-label">TRANSMISSION 731-B</div>
     <div class="payload-data" id="payload">{{ payload }}</div>
-    <button class="btn-copy" onclick="copyPayload()">Copy</button>
+    <button class="btn-copy" onclick="copyText('payload')">Copy</button>
+  </div>
+
+  <div class="payload-box" style="margin-top:1.5rem;">
+    <div class="payload-label">TRANSMISSION 731-C</div>
+    <div class="payload-data" id="decoy-c">{{ decoy_c }}</div>
+    <button class="btn-copy" onclick="copyText('decoy-c')">Copy</button>
   </div>
 
   <div class="case-note">
     <span class="note-icon">📋</span>
-    Case note from field operative:<br>
+    Field operative note:<br>
     <em>
-      "The intercepted transmission does not appear to use strong encryption.
-      It may have been transformed more than once before transmission."
+      "Multiple transmissions intercepted from the BlueCore relay.
+       Not all are authentic. One contains the operational intelligence.
+       Earlier mission data may be relevant."
     </em>
   </div>
 </div>
@@ -34,13 +47,13 @@
 
   <div class="story-block">
     <p>
-      After the first leak, Atlas Core intercepted a suspicious message moving through the
-      BlueCore network. The payload looks unreadable, but analysts believe it was protected
-      using weak reversible transformations instead of real cryptography.
+      After the first leak, Atlas Core intercepted several transmissions moving through the
+      BlueCore network. Analysts believe at least one payload was protected using weak
+      reversible transformations instead of real cryptography.
     </p>
 
     <p>
-      Your objective is to recover the original message and extract the second flag.
+      Identify the authentic transmission, reverse the obfuscation, and extract the second flag.
     </p>
   </div>
 
@@ -57,7 +70,7 @@
 
     <div class="info-row">
       <span class="info-label">Objective</span>
-      <span class="info-value">Analyze the intercepted transmission and recover the second operation token.</span>
+      <span class="info-value">Identify the authentic transmission and recover the second operation token.</span>
     </div>
 
     <div class="info-row">
@@ -69,8 +82,9 @@
   <div class="transmission-warning">
     <h3>// Analyst Note</h3>
     <p>
-      Do not assume the first readable output is the final answer. Continue analyzing the
-      message until the recovered text clearly matches the flag format.
+      Multiple transmissions may not all be authentic.
+      Earlier intelligence from the first mission may be relevant to identifying
+      the correct transmission and the key material required to decode it.
     </p>
   </div>
 </div>

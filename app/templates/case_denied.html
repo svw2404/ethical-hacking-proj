@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Access Denied — Atlas Core Internal{% endblock %}
+
+{% block content %}
+
+<div class="challenge-banner hard-banner">
+  Internal Case Record — Access Denied
+</div>
+
+<div class="error-box">
+  <strong>Access Denied</strong>
+  <p style="margin-top:0.75rem;">
+    Case <code>{{ case_id }}</code> is restricted. A valid verification code is required.
+  </p>
+  <p style="margin-top:0.5rem; color: var(--text-sub); font-size: 0.85rem;">
+    Provide the code via the <code>code</code> URL parameter.
+  </p>
+</div>
+
+{% endblock %}

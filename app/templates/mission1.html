@@ -3,12 +3,6 @@
 
 {% block content %}
 
-<!--
-  Deployment note:
-  legacy audit bundle moved to /static/archive/staff_audit_731.txt
-  Remove this note before production.
--->
-
 <div class="challenge-banner hard-banner">
   Mission 1 — Staff Portal Leak
 </div>
@@ -56,15 +50,16 @@
   <div class="story-block">
     <p>
       Atlas Core Systems recently deployed a temporary internal staff portal during a maintenance window.
-      Intelligence suggests that the deployment may have included a careless developer mistake.
+      Intelligence suggests that the deployment environment was not fully cleaned before the portal went live.
     </p>
 
     <p>
-      The rendered page appears normal, but useful information may still be present somewhere in what the browser receives.
+      The rendered page is not the complete picture. Deployment leftovers can appear in
+      multiple places across the full application response and surrounding infrastructure.
     </p>
 
     <p>
-      Recover the first flag and use it to continue the operation.
+      Recover the first flag by collecting all fragments of the deployment metadata.
     </p>
   </div>
 
@@ -81,7 +76,12 @@
 
     <div class="info-row">
       <span class="info-label">Objective</span>
-      <span class="info-value">Investigate the staff portal and recover the first operation token.</span>
+      <span class="info-value">Investigate the full deployment environment and recover the first operation token.</span>
+    </div>
+
+    <div class="info-row">
+      <span class="info-label">Suggested Tools</span>
+      <span class="info-value">Browser DevTools, curl, Burp Suite</span>
     </div>
   </div>
 </div>

@@ -7,8 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app/ .
 
-RUN python init_db.py
-
 EXPOSE 5000
 
+# init_db runs inside app.py at startup so it picks up env vars from docker-compose
 CMD ["python", "app.py"]

@@ -6,13 +6,13 @@
 <div class="profile-header">
   <span class="session-info">Logged in as: <strong>{{ session_user }}</strong></span>
   <a href="/logout" class="btn-logout">Logout</a>
-  <a href="/login" class="btn-secondary">← Back to Portal</a>
+  <a href="/login" class="btn-secondary">&#8592; Back to Portal</a>
 </div>
 
 {% if profile %}
   {% if profile['access_level'] == 'Administrator' %}
   <div class="flag-banner">
-    🚩 Administrator record retrieved
+    &#x26A0; Administrator record retrieved
   </div>
   {% endif %}
 
@@ -43,7 +43,7 @@
       </div>
       <div class="detail-row {% if profile['access_level'] == 'Administrator' %}flag-row{% endif %}">
         <span class="detail-label">Notes</span>
-        <span class="detail-value mono flag-text">{{ profile['note'] }}</span>
+        <span class="detail-value mono">{{ profile['note'] }}</span>
       </div>
     </div>
   </div>

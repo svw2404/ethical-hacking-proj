@@ -1,25 +1,13 @@
-Atlas Core Staff Audit — Redacted
+Atlas Core Staff Audit — ARCHIVE COPY (Superseded)
 Classification: INTERNAL USE ONLY
-Audit Reference: BATCH-731
 
-────────────────────────────────────────────────────────────
-PERSONNEL ACCESS REVIEW — Q4 CYCLE
-────────────────────────────────────────────────────────────
+Batch: BATCH-406 (EXPIRED)
+Project keyword: BLUECORE
+Coordinator: legacy-ops
+Status: SUPERSEDED — this path is no longer active
 
-Accounts reviewed: 47
-Accounts flagged for migration: 3
-Batch coordinator: maya (id: 102)
+Token (expired):
+dGhpc190b2tlbl9oYXNfZXhwaXJlZA==
 
-Project keyword: ATLAS
-
-────────────────────────────────────────────────────────────
-SYSTEM MAINTENANCE TOKEN
-────────────────────────────────────────────────────────────
-
-Maintenance token (base64):
-cGljb0NURntkZXBsb3ltZW50X2FydGlmYWN0c19sZWFrX3NlY3JldHN9
-
-NOTE: This file was included in the deployment bundle by mistake.
-Scheduled for removal. Do not distribute.
-
-────────────────────────────────────────────────────────────
+Note: This document has been superseded. The current deployment audit system
+has been relocated. Contact atlas-ops for current documentation paths.

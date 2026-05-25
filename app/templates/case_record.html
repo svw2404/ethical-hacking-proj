@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Case Record — Atlas Core Internal{% endblock %}
+
+{% block content %}
+
+<div class="challenge-banner hard-banner">
+  Internal Case Record — Restricted Access
+</div>
+
+<div class="flag-banner">
+  &#x26A0; Restricted case record retrieved
+</div>
+
+<div class="profile-card admin-profile">
+  <div class="profile-top">
+    <div class="profile-avatar">&#x26A0;</div>
+    <div class="profile-identity">
+      <h2 class="profile-name">Case {{ case['id'] }}</h2>
+      <div class="profile-dept">{{ case['title'] }}</div>
+      <span class="profile-badge badge-admin">{{ case['status'] }}</span>
+    </div>
+  </div>
+
+  <div class="profile-details">
+    <div class="detail-row">
+      <span class="detail-label">Case ID</span>
+      <span class="detail-value mono">{{ case['id'] }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Title</span>
+      <span class="detail-value">{{ case['title'] }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Status</span>
+      <span class="detail-value">{{ case['status'] }}</span>
+    </div>
+    <div class="detail-row flag-row">
+      <span class="detail-label">Recovery Note</span>
+      <span class="detail-value mono flag-text">{{ case['recovery_note'] }}</span>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
