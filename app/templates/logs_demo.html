@@ -2,77 +2,135 @@
 {% block title %}Logs Demo — Blue Team{% endblock %}
 
 {% block content %}
+
 <div class="secure-banner">
-  Blue Team — Logging &amp; Monitoring Demonstration (OWASP A09)
+  Blue Team — Logging &amp; Monitoring Review
 </div>
 
 <div class="logs-container">
-  <h2 class="section-title">// Access Log — app/logs/access.log</h2>
+  <h2 class="section-title">// Security Event Log</h2>
+
   <p class="logs-desc">
-    This log captures all login attempts, SQL injection detections, profile access mismatches,
-    rate limit events, and security anomalies. Interact with the vulnerable and secure routes,
-    then refresh this page to see what was recorded.
+    This page is used by the Blue Team to review security-relevant events generated during the lab.
+    It should be opened during the defense explanation or after Red Team testing, not as part of the
+    initial player challenge.
   </p>
 
-  {% if log_entries %}
+  {% if logs %}
   <div class="log-terminal">
-    {% for entry in log_entries %}
+    {% for line in logs %}
       <div class="log-line
-        {% if '[WARNING]' in entry %}log-warn
-        {% elif '[ERROR]' in entry %}log-error
-        {% elif '[INFO]' in entry %}log-info
-        {% endif %}">{{ entry.strip() }}</div>
+        {% if 'ERROR' in line %}log-error
+        {% elif 'WARNING' in line %}log-warn
+        {% else %}log-info
+        {% endif %}">
+        {{ line }}
+      </div>
     {% endfor %}
   </div>
   {% else %}
-  <div class="log-empty">
-    No log entries yet. Try interacting with
-    <a href="/login">the vulnerable login</a> or
-    <a href="/secure-login">the secure login</a> first.
+  <div class="log-terminal empty-log">
+    <div class="log-line log-info">
+      No log entries yet. Interact with the lab routes, then refresh this page.
+    </div>
   </div>
   {% endif %}
 </div>
 
 <div class="challenge-info">
+  <h2 class="section-title">// Blue Team Explanation</h2>
+
   <div class="learning-block">
-    <h3>// Blue Team — Logging &amp; Monitoring Explanation</h3>
-    <p><strong>OWASP Category:</strong> A09:2021 — Security Logging and Monitoring Failures</p>
     <p>
-      This log demonstrates what a real application should record: who attempted to log in,
-      from which IP address, whether the payload looked malicious, whether access was
-      unauthorized, and what the outcome was.
+      Logging and monitoring are essential for detecting suspicious activity, investigating incidents,
+      and proving what happened during an attack attempt. A system may still be vulnerable, but without
+      logs the defenders may not know that the attack occurred.
     </p>
-    <h4>Log entries recorded by this system:</h4>
+
+    <div class="info-card">
+      <div class="info-row">
+        <span class="info-label">OWASP Category</span>
+        <span class="info-value">A09:2021 — Security Logging and Monitoring Failures</span>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">Purpose</span>
+        <span class="info-value">Record authentication attempts, suspicious input, blocked access, and system errors.</span>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">Blue Team Use</span>
+        <span class="info-value">Review evidence after Red Team activity and explain detection strategy.</span>
+      </div>
+    </div>
+
+    <h3>// Events This Lab Records</h3>
+
     <table class="info-table">
-      <thead><tr><th>Event</th><th>Log Level</th><th>What Is Recorded</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Event Type</th>
+          <th>Level</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
       <tbody>
-        <tr><td>Login attempt</td><td><span class="log-info-tag">INFO</span></td><td>Username, IP address, timestamp</td></tr>
-        <tr><td>SQL injection payload</td><td><span class="log-warn-tag">WARNING</span></td><td>IP, raw payload string</td></tr>
-        <tr><td>Login failure</td><td><span class="log-warn-tag">WARNING</span></td><td>Username, IP</td></tr>
-        <tr><td>Login success</td><td><span class="log-info-tag">INFO</span></td><td>Username, IP</td></tr>
-        <tr><td>IDOR profile access</td><td><span class="log-warn-tag">WARNING</span></td><td>Session user ID, requested profile ID, IP</td></tr>
-        <tr><td>Rate limit exceeded</td><td><span class="log-warn-tag">WARNING</span></td><td>IP address</td></tr>
-        <tr><td>Secure login blocked</td><td><span class="log-warn-tag">WARNING</span></td><td>IP, payload (not shown to user)</td></tr>
-        <tr><td>Database error</td><td><span class="log-error-tag">ERROR</span></td><td>IP, error message</td></tr>
+        <tr>
+          <td>Login attempt</td>
+          <td><span class="log-info-tag">INFO</span></td>
+          <td>Tracks authentication activity by username and source IP.</td>
+        </tr>
+        <tr>
+          <td>Suspicious input pattern</td>
+          <td><span class="log-warn-tag">WARNING</span></td>
+          <td>Marks input that resembles an injection or abuse attempt.</td>
+        </tr>
+        <tr>
+          <td>Login failure</td>
+          <td><span class="log-warn-tag">WARNING</span></td>
+          <td>Helps identify brute-force or repeated failed access attempts.</td>
+        </tr>
+        <tr>
+          <td>Login success</td>
+          <td><span class="log-info-tag">INFO</span></td>
+          <td>Records successful authentication events.</td>
+        </tr>
+        <tr>
+          <td>Unauthorized profile request</td>
+          <td><span class="log-warn-tag">WARNING</span></td>
+          <td>Detects possible broken access control or IDOR behavior.</td>
+        </tr>
+        <tr>
+          <td>Rate limit event</td>
+          <td><span class="log-warn-tag">WARNING</span></td>
+          <td>Shows repeated authentication attempts from the same source.</td>
+        </tr>
+        <tr>
+          <td>System/database error</td>
+          <td><span class="log-error-tag">ERROR</span></td>
+          <td>Helps defenders detect unexpected failures or attack side effects.</td>
+        </tr>
       </tbody>
     </table>
 
-    <h4>Why logging matters:</h4>
+    <h3>// Why Logging Matters</h3>
     <ul>
-      <li>Without logs, repeated attack attempts go unnoticed until serious damage occurs.</li>
-      <li>Logs allow incident response teams to reconstruct exactly what happened and when.</li>
-      <li>Alerts can be triggered when suspicious patterns appear (e.g., 100 failed logins from one IP).</li>
-      <li>Logs must be tamper-resistant and stored separately from the application they monitor.</li>
-      <li>Logs should never contain raw passwords or full credit card numbers.</li>
+      <li>Logs help defenders notice attacks that would otherwise remain invisible.</li>
+      <li>Logs allow teams to reconstruct the timeline of an incident.</li>
+      <li>Logs support alerting rules for repeated failures or suspicious input patterns.</li>
+      <li>Logs should be protected from tampering and stored separately in real systems.</li>
+      <li>Logs should avoid recording raw passwords, full payment data, or unnecessary sensitive information.</li>
     </ul>
 
-    <h4>Hardening plan:</h4>
+    <h3>// Long-Term Hardening Plan</h3>
     <ul>
-      <li>Send logs to a centralized SIEM (Security Information and Event Management) system.</li>
-      <li>Set up alerting rules for high-frequency login failures or SQL injection signatures.</li>
-      <li>Store logs with write-only access — applications can append but not delete.</li>
-      <li>Rotate and archive logs regularly with integrity verification (e.g., hash chains).</li>
+      <li>Send logs to a centralized SIEM system.</li>
+      <li>Create alerts for repeated failed logins and suspicious request patterns.</li>
+      <li>Use write-only application log permissions where possible.</li>
+      <li>Rotate, archive, and integrity-check logs regularly.</li>
+      <li>Review logs as part of incident response and security monitoring.</li>
     </ul>
   </div>
 </div>
+
 {% endblock %}

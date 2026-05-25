@@ -2,8 +2,9 @@
 {% block title %}Secure Profile — Atlas Core{% endblock %}
 
 {% block content %}
+
 <div class="secure-banner">
-  ✅ SECURE VERSION — Session-based authorization, unauthorized access blocked
+  Secure Comparison Environment
 </div>
 
 <div class="profile-header">
@@ -20,11 +21,6 @@
       You are not authorized to view this profile.<br>
       This request has been logged.
     </p>
-    <div class="blocked-note">
-      <strong>What happened?</strong> You tried to access a profile that does not belong to your account.
-      In the secure version, the server checks <code>session["user_id"] == requested_id</code>
-      before returning any data. This check failed, and access was denied.
-    </div>
   </div>
 
 {% elif profile %}
@@ -59,25 +55,37 @@
 {% endif %}
 
 <div class="challenge-info">
+  <h2 class="section-title">// Secure System Overview</h2>
+
+  <div class="story-block">
+    <p>
+      This version of the Atlas Core employee portal enforces server-side access control on
+      every profile request. The authenticated session is verified against the requested resource
+      before any data is returned.
+    </p>
+    <p>
+      Unauthorized access attempts are rejected with a 403 response and recorded in the security log.
+    </p>
+  </div>
+
   <div class="info-card secure-card">
-    <h3 class="secure-title">// Secure Code (comparison)</h3>
-    <pre class="code-block secure-code">
-# SECURE: authorization check before returning profile data
-@app.route("/secure-profile")
-def secure_profile():
-    requested_id = request.args.get("id")
-    current_user = session["user_id"]
-    current_role = session["role"]
-
-    # Only allow access to own profile, or admin accessing any
-    if requested_id != str(current_user) and current_role != "admin":
-        logger.warning(f"Blocked IDOR attempt: user={current_user} requested={requested_id}")
-        return "403 Access Denied", 403
-
-    # Safe to return the profile now
-    profile = db.execute("SELECT * FROM profiles WHERE id = ?", (requested_id,)).fetchone()
-    return render_template("secure_profile.html", profile=profile)
-    </pre>
+    <div class="info-row">
+      <span class="info-label">Purpose</span>
+      <span class="info-value">Blue Team secure comparison</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Protection</span>
+      <span class="info-value">Server-side session authorization on every profile request</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">On unauthorized access</span>
+      <span class="info-value">403 Access Denied — attempt is logged</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">OWASP Category</span>
+      <span class="info-value">A01:2021 — Broken Access Control</span>
+    </div>
   </div>
 </div>
+
 {% endblock %}
